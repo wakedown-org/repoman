@@ -1,0 +1,15 @@
+{
+  "name": "repoman",
+  "version": "0.0.1-a",
+  "description": "Repository Manager",
+  "main": "repoman.js",
+  "dependencies": {
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "nconf": "^0.8.4",
+    "passport": "^0.3.2",
+    "passport-localapikey": "0.0.3",
+    "strong-cluster-tls-store": "^1.0.2",
+    "strong-store-cluster": "^1.0.0"
+  }
+}
