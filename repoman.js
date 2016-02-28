@@ -2,7 +2,7 @@ var express             = require('express');
 var path                = require('path');
 var fs                  = require('fs');
 var http                = require('http');
-var https               = require('https');
+//var https               = require('https');
 var url                 = require('url');
 var tlsSessions         = require('strong-cluster-tls-store');
 var passport            = require('passport');
@@ -20,15 +20,15 @@ nconf.defaults({
     'pkgLink': 'pkg',
     'repositoriesRoot': 'repositories/',
     'http': {
-      'port': 8000
+      'port': (process.env.PORT || 5000) //8000
     },
-    'https': {
-      'port': 8443
-    },
-    'certificate' : {
-      'fileKeyPath': '../../../key.pem',
-      'fileCertPath': '../../../key-cert.pem'
-    },
+  //  'https': {
+  //    'port': 8443
+  //  },
+  //  'certificate' : {
+  //    'fileKeyPath': '../../../key.pem',
+  //    'fileCertPath': '../../../key-cert.pem'
+  //  },
     'users' : [
       { 
         'email' : 'fumasa@wakedown.org',
@@ -72,10 +72,10 @@ nconf.defaults({
     }
 });
 
-var httpsOptions = {
-  key: fs.readFileSync(nconf.get('certificate:fileKeyPath')),
-  cert: fs.readFileSync(nconf.get('certificate:fileCertPath'))
-};
+//var httpsOptions = {
+//  key: fs.readFileSync(nconf.get('certificate:fileKeyPath')),
+//  cert: fs.readFileSync(nconf.get('certificate:fileCertPath'))
+//};
 
 var app = express();
 
@@ -101,7 +101,7 @@ passport.use(new LocalApiKeyStrategy(
 
 app.use(function(req, res, next) {
     if (!/https/.test(req.protocol)){
-      res.redirect('https://' + req.headers.host.replace(nconf.get('http:port'), nconf.get('https:port')) + req.url);
+      res.redirect('https://' + req.headers.host/*.replace(nconf.get('http:port'), nconf.get('https:port'))*/ + req.url);
     } else {
       res.setHeader('Strict-Transport-Security', 'max-age=31536000');
       return next();
@@ -236,20 +236,20 @@ app.all('*', function(req, res) {
 });
 
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(httpsOptions, app);
+//var httpsServer = https.createServer(httpsOptions, app);
 
-tlsSessions(httpsServer);
+//tlsSessions(httpsServer);
 
 httpServer.listen(nconf.get('http:port'));
-httpsServer.listen(nconf.get('https:port'));
+//httpsServer.listen(nconf.get('https:port'));
 
 httpServer.on('error', function (e) {
   console.log('error on httpServer:' + e);
 });
 
-httpsServer.on('error', function (e) {
-  console.log('error on httpsServer:' + e);
-});
+//httpsServer.on('error', function (e) {
+//  console.log('error on httpsServer:' + e);
+//});
 
 function dumpObj(obj) {
   var util = require('util');
