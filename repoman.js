@@ -243,6 +243,14 @@ tlsSessions(httpsServer);
 httpServer.listen(nconf.get('http:port'));
 httpsServer.listen(nconf.get('https:port'));
 
+httpServer.on('error', function (e) {
+  console.log('error on httpServer:' + e);
+});
+
+httpsServer.on('error', function (e) {
+  console.log('error on httpsServer:' + e);
+});
+
 function dumpObj(obj) {
   var util = require('util');
   return util.inspect(obj, { showHidden: true, depth: null });

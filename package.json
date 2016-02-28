@@ -3,6 +3,10 @@
   "version": "0.0.1-a",
   "description": "Repository Manager",
   "main": "repoman.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node repoman.js"
+  },
   "dependencies": {
     "express": "^4.13.4",
     "express-session": "^1.13.0",
