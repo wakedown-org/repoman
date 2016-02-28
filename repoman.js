@@ -100,13 +100,22 @@ passport.use(new LocalApiKeyStrategy(
 ));
 
 app.use(function(req, res, next) {
-    if (!/https/.test(req.protocol)){
-      res.redirect('https://' + req.headers.host/*.replace(nconf.get('http:port'), nconf.get('https:port'))*/ + req.url);
-    } else {
-      res.setHeader('Strict-Transport-Security', 'max-age=31536000');
-      return next();
-    } 
+    if (req.headers['x-forwarded-proto'] != 'https') {
+        res.redirect('https://' + req.headers.host + req.path);
+    }
+    else {
+        return next();
+    }
 });
+
+//app.use(function(req, res, next) {
+//    if (!/https/.test(req.protocol)){
+//      res.redirect('https://' + req.headers.host/*.replace(nconf.get('http:port'), nconf.get('https:port'))*/ + req.url);
+//    } else {
+//      res.setHeader('Strict-Transport-Security', 'max-age=31536000');
+//      return next();
+//    } 
+//});
 
 app.use(session({ 
   secret: nconf.get('sessionKey'),
