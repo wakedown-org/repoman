@@ -30,30 +30,30 @@ nconf.defaults({
   //    'fileCertPath': '../../../key-cert.pem'
   //  },
     'users' : [
-      { 
+      {
         'email' : 'fumasa@wakedown.org',
         'repositories' : [
-          { 
+          {
             'name': 'repo01',
             'tokens' : [
-              { 
+              {
                 'token' : 'bruzundungas',
                 'permission' : 'rw'
               },
-              { 
+              {
                 'token' : 'krakatoa',
                 'permission' : 'r'
               }
             ]
           },
-          { 
+          {
             'name': 'repo02',
             'tokens' : [
-              { 
+              {
                 'token' : 'camila',
                 'permission' : 'rw'
               },
-              { 
+              {
                 'token' : 'giovanna',
                 'permission' : 'r'
               }
@@ -87,10 +87,10 @@ passport.use(new LocalApiKeyStrategy(
   function(token, done) {
     process.nextTick(function () {
       findUserByToken(token, function(err, user) {
-        if (err) { 
-          return done(err); 
+        if (err) {
+          return done(err);
         }
-        if (!user) { 
+        if (!user) {
           return done(null, false, { message: 'Unknown token : ' + token });
         }
         return done(null, user);
@@ -114,13 +114,13 @@ app.use(function(req, res, next) {
 //    } else {
 //      res.setHeader('Strict-Transport-Security', 'max-age=31536000');
 //      return next();
-//    } 
+//    }
 //});
 
-app.use(session({ 
+app.use(session({
   secret: nconf.get('sessionKey'),
   saveUninitialized: true,
-  resave: true 
+  resave: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -135,7 +135,7 @@ passport.deserializeUser(function(email, done) {
   });
 });
 
-app.get('/', 
+app.get('/',
   function(req, res) {
     res.writeHead(200);
     if (req.isAuthenticated()) {
@@ -146,13 +146,13 @@ app.get('/',
   }
 );
 
-app.get('/favicon.ico',
-  function(req, res) {
-    res.writeHead(200, {'Content-Type': 'image/x-icon'} );
-    res.end();
-    return; 
-  }
-);
+//app.get('/favicon.ico',
+//  function(req, res) {
+//    res.writeHead(200, {'Content-Type': 'image/x-icon'} );
+//    res.end();
+//    return;
+//  }
+//);
 
 app.all('/' + nconf.get('pkgLink'),
   passport.authenticate('localapikey', { failureRedirect: '/error' }),
@@ -231,7 +231,7 @@ app.all('/' + nconf.get('pkgLink') + '/*',
   }
 );
 
-app.get('/error', 
+app.get('/error',
   function(req, res) {
     req.logout();
     res.writeHead(401);
@@ -266,8 +266,8 @@ function dumpObj(obj) {
 }
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { 
-    return next(); 
+  if (req.isAuthenticated()) {
+    return next();
   }
   req.logout();
   res.redirect('/error');
@@ -333,12 +333,12 @@ function readRepoUser(token, fn, path) {
 
 function buildFileListFromPath(path) {
   var list = [];
-  
+
   var files = fs.readdirSync(path);
   for (var i = 0, len = files.length; i < len; i++) {
     list.push(readFileInfo(path, files[i]));
   }
-  
+
   return list;
 }
 
